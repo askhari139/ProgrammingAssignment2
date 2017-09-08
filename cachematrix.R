@@ -8,17 +8,20 @@
 ## The get inverse function acts as a variable retaining the value of the inverse (i)
 
 makeCacheMatrix <- function(x = matrix()) {
-    i <- NULL
+    i_cached <- NULL
     setmatrix <- function(y)
     {
-        x <<- y
-        i <<- NULL
+        x <<- y # The asignment operator pushes x to the parent environment
+        i_cached <<- NULL
     }
-    getmatrix <- function() x
-    setinverse <- function(inverse) i <<- inverse #pushes i to the parent environment
-    getinverse <- function() i
-    list(setmatrix = setmatrix, getmatrix = getmatrix, setinverse = setinverse, 
-         getinverse = getinverse)
+    getmatrix <- function() 
+        {return(x)}
+    setinverse <- function(inverse) 
+        {i_cached <<- inverse} #pushes i to the parent environment
+    getinverse <- function() 
+        {return(i_catched)}
+    list(setmatrix = setmatrix, getmatrix = getmatrix, 
+         setinverse = setinverse, getinverse = getinverse)
 }
 
 
@@ -28,16 +31,16 @@ makeCacheMatrix <- function(x = matrix()) {
 ## returns it and stores it in getinverse of the object.
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
-    j <- x$getinverse()
-    if(!is.null(j)) {
+    ## Return a matrix that is the inverse of 'x'
+    inverse <- x$getinverse() 
+    if(!is.null(inverse)) {
         message("getting cached data")
-        return(j)
+        return(inverse)
     }
     data <- x$getmatrix()
-    j <- solve(data)
-    x$setinverse(j)
-    j
+    inverse <- solve(data)
+    x$setinverse(inverse)
+    return(inverse)
 }
 
 
@@ -50,12 +53,12 @@ cacheSolve <- function(x, ...) {
 matrixCache <- function(x = matrix())
 {
     i <- NULL
-    setmat <- function(y)
+    setmat <- function(y) # to feed a new matrix to the object
     {
         x <<- y
         i <<- NULL
     }
-    getinv <- function()
+    getinv <- function() # this performs the function of cacheSolve in the previous code.
     {
         if(!(is.null(i)))
         {
@@ -69,7 +72,7 @@ matrixCache <- function(x = matrix())
         return(i)
     }
     return(list(setmat = setmat, getinv = getinv))
-}
+} #To test, one has to create a matrix object and call the getinv function of the object.
 
 ## I am not completely satisified with the functions, however.
 ## Because, this is essentially the same thing as storing the inverse of a
